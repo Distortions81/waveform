@@ -33,17 +33,20 @@ func main() {
 	const width, height = 100, 600      // Screen dimensions (narrow, to mimic panel c)
 	const slit1Y, slit2Y = 250.0, 350.0 // Slit positions
 	const distance = 300.0              // Distance from the slits to the screen (detector)
+	const numFrames = 6000
+	const freqDiv = 100.0
 
 	os.Mkdir("render", 0755)
+	os.Remove("output.mp4")
 
-	for x := 1; x < 200; x++ {
+	for x := 1; x < numFrames; x++ {
 		// Create a new image to represent the screen
 		img := image.NewRGBA(image.Rect(0, 0, height, width)) // Note: Swap width and height
 
 		// Iterate over each pixel along the height (y-axis) to simulate the intensity on the screen
 		for y := 0; y < height; y++ {
 			// Calculate the interference intensity at this point on the screen
-			intensity := calculateInterference(float64(y), slit1Y, slit2Y, float64(x)/100, float64(x)/100, distance)
+			intensity := calculateInterference(float64(y), slit1Y, slit2Y, float64(x)/freqDiv, float64(x)/freqDiv, distance)
 
 			// Normalize the intensity to a value between 0 and 255 for grayscale rendering
 			grayValue := uint8(math.Min(intensity*255/4, 255))    // Scaling factor for visibility
@@ -67,8 +70,7 @@ func main() {
 		png.Encode(file, img)
 		fmt.Println("Image saved:", fileName)
 	}
-	compressImagesToVideo("render/frame_%03d.png", "output.mp4", 30, 20)
-
+	compressImagesToVideo("render/frame_%03d.png", "output.mp4", 60, 20)
 }
 
 func compressImagesToVideo(inputPattern string, outputFile string, frameRate int, crf int) error {
