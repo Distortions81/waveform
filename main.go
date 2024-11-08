@@ -30,7 +30,7 @@ func calculateInterference(y, slit1Y, slit2Y, w1, w2, distance float64) float64 
 }
 
 func main() {
-	const width, height = 100, 600      // Screen dimensions (narrow, to mimic panel c)
+	const width, height = 216, 3840     // Screen dimensions (narrow, to mimic panel c)
 	const slit1Y, slit2Y = 250.0, 350.0 // Slit positions
 	const distance = 300.0              // Distance from the slits to the screen (detector)
 	const numFrames = 6000
@@ -70,7 +70,7 @@ func main() {
 		png.Encode(file, img)
 		fmt.Println("Image saved:", fileName)
 	}
-	compressImagesToVideo("render/frame_%03d.png", "output.mp4", 60, 20)
+	compressImagesToVideo("render/frame_%03d.png", "output.mp4", 60, 12)
 }
 
 func compressImagesToVideo(inputPattern string, outputFile string, frameRate int, crf int) error {
