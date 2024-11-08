@@ -35,12 +35,12 @@ func calculateInterference(y, slit1Y, slit2Y, w1, w2, distance float64) float64 
 func main() {
 	const width, height = 384, 3840
 	const center = (height / 2)
-	const offset = (height / 4)                             // Screen dimensions (narrow, to mimic panel c)
+	const offset = (height / 10)                            // Screen dimensions (narrow, to mimic panel c)
 	const slit1Y, slit2Y = center + offset, center - offset // Slit positions
 	const distance = 300.0                                  // Distance from the slits to the screen (detector)
-	const numFrames = 6000
-	const freqDiv = 1000.0
-	const multi = 10
+	const numFrames = 3000
+	const freqDiv = 10.0
+	const freqMulti = 1000
 
 	os.Mkdir("render", 0755)
 	os.Remove("output.mp4")
@@ -48,6 +48,7 @@ func main() {
 	wg := sizedwaitgroup.New(runtime.NumCPU())
 
 	for x := 1; x < numFrames; x++ {
+		f := 1 / math.Sqrt(float64(x))
 		wg.Add()
 		go func(x int) {
 			// Create a new image to represent the screen
@@ -56,11 +57,11 @@ func main() {
 			// Iterate over each pixel along the height (y-axis) to simulate the intensity on the screen
 			for y := 0; y < height; y++ {
 				// Calculate the interference intensity at this point on the screen
-				intensity := calculateInterference(float64(y), slit1Y, slit2Y, float64(x*multi)/freqDiv, float64((numFrames-x)*multi)/freqDiv, distance)
+				intensity := calculateInterference(float64(y), slit1Y, slit2Y, (float64(f*freqMulti) / freqDiv), (float64(f*freqMulti) / freqDiv), distance)
 
 				// Normalize the intensity to a value between 0 and 255 for grayscale rendering
-				grayValue := uint8(math.Min(intensity*255/4, 255))    // Scaling factor for visibility
-				color := color.RGBA{R: grayValue, G: 0, B: 0, A: 255} // Red channel for bright spots
+				grayValue := uint8(math.Min(intensity*255/4, 255))                    // Scaling factor for visibility
+				color := color.RGBA{R: grayValue, G: grayValue, B: grayValue, A: 255} // Red channel for bright spots
 
 				// Set the pixel color for the rotated image (swap x and y to rotate 90 degrees CCW)
 				for x := 0; x < width; x++ {
