@@ -33,13 +33,14 @@ func calculateInterference(y, slit1Y, slit2Y, w1, w2, distance float64) float64 
 }
 
 func main() {
-	const width, height = 216, 3840
+	const width, height = 384, 3840
 	const center = (height / 2)
 	const offset = (height / 4)                             // Screen dimensions (narrow, to mimic panel c)
 	const slit1Y, slit2Y = center + offset, center - offset // Slit positions
 	const distance = 300.0                                  // Distance from the slits to the screen (detector)
 	const numFrames = 6000
-	const freqDiv = 10.0
+	const freqDiv = 1000.0
+	const multi = 10
 
 	os.Mkdir("render", 0755)
 	os.Remove("output.mp4")
@@ -55,7 +56,7 @@ func main() {
 			// Iterate over each pixel along the height (y-axis) to simulate the intensity on the screen
 			for y := 0; y < height; y++ {
 				// Calculate the interference intensity at this point on the screen
-				intensity := calculateInterference(float64(y), slit1Y, slit2Y, float64(x)/freqDiv, float64(numFrames-x)/freqDiv, distance)
+				intensity := calculateInterference(float64(y), slit1Y, slit2Y, float64(x*multi)/freqDiv, float64((numFrames-x)*multi)/freqDiv, distance)
 
 				// Normalize the intensity to a value between 0 and 255 for grayscale rendering
 				grayValue := uint8(math.Min(intensity*255/4, 255))    // Scaling factor for visibility
