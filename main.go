@@ -30,9 +30,11 @@ func calculateInterference(y, slit1Y, slit2Y, w1, w2, distance float64) float64 
 }
 
 func main() {
-	const width, height = 216, 3840     // Screen dimensions (narrow, to mimic panel c)
-	const slit1Y, slit2Y = 250.0, 350.0 // Slit positions
-	const distance = 300.0              // Distance from the slits to the screen (detector)
+	const width, height = 216, 3840
+	const center = (height / 2)
+	const offset = (height / 4)                             // Screen dimensions (narrow, to mimic panel c)
+	const slit1Y, slit2Y = center + offset, center - offset // Slit positions
+	const distance = 300.0                                  // Distance from the slits to the screen (detector)
 	const numFrames = 6000
 	const freqDiv = 100.0
 
