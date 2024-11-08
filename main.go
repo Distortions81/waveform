@@ -48,7 +48,7 @@ func main() {
 		// Iterate over each pixel along the height (y-axis) to simulate the intensity on the screen
 		for y := 0; y < height; y++ {
 			// Calculate the interference intensity at this point on the screen
-			intensity := calculateInterference(float64(y), slit1Y, slit2Y, float64(x)/freqDiv, float64(x)/freqDiv, distance)
+			intensity := calculateInterference(float64(y), slit1Y, slit2Y, float64(x)/freqDiv, float64(numFrames-x)/freqDiv, distance)
 
 			// Normalize the intensity to a value between 0 and 255 for grayscale rendering
 			grayValue := uint8(math.Min(intensity*255/4, 255))    // Scaling factor for visibility
